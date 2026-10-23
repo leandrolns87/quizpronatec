@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Simulado FlutterFlow & Firebase | Aulas 1 a 10</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              lime: '#dcffa0',
+              limeDark: '#b4e66d',
+              darkBg: '#121214',
+              surface: '#1a1a1e',
+              card: '#222228',
+              border: '#2f2f38',
+              accent: '#38bdf8',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            heading: ['Montserrat', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Suavização de toque e scroll mobile */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #121214;
+      color: #e4e4e7;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #18181b;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #3f3f46;
+      border-radius: 9999px;
+    }
+    /* Efeito de brilho sutil no estilo dark engineering */
+    .glow-lime {
+      box-shadow: 0 0 25px -5px rgba(220, 255, 160, 0.25);
+    }
+    .glow-lime-sm {
+      box-shadow: 0 0 14px -3px rgba(220, 255, 160, 0.3);
+    }
+    .option-btn {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .option-btn:active {
+      transform: scale(0.985);
+    }
+  </style>
+</head>
+<body class="bg-[#121214] text-zinc-100 flex flex-col justify-between selection:bg-brand-lime selection:text-black">
+
+  <!-- ========================================== -->
+  <!-- 1. HEADER GLOBAL MOBILE                   -->
+  <!-- ========================================== -->
+  <header class="w-full border-b border-brand-border bg-[#16161a]/90 backdrop-blur sticky top-0 z-50 px-4 py-3 sm:px-6">
+    <div class="max-w-2xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-lime shadow-[0_0_8px_#dcffa0]"></span>
+        <span class="font-heading font-bold text-xs uppercase tracking-wider text-brand-lime">Hackathon Camaçari</span>
+      </div>
+      <div class="text-[11px] font-mono text-zinc-400 bg-brand-surface border border-brand-border px-2.5 py-1 rounded-full">
+        100h • FlutterFlow & Firebase
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 2. CONTAINER PRINCIPAL                     -->
+  <!-- ========================================== -->
+  <main class="w-full flex-1 max-w-2xl mx-auto p-4 sm:p-6 flex flex-col justify-center">
+
+    <!-- ======================================== -->
+    <!-- TELA 1: ONBOARDING / IDENTIFICAÇÃO DO ALUNO -->
+    <!-- ======================================== -->
+    <section id="screen-welcome" class="space-y-6">
+      <div class="text-center space-y-3 pt-2">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-800/80 border border-brand-lime/30 text-brand-lime text-xs font-medium">
+          <span>⚡</span> Módulos 1 a 3 • Exercício Avaliativo
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-heading font-extrabold text-white tracking-tight leading-snug">
+          Avaliação de Fixação<br>
+          <span class="text-brand-lime">Aulas 1 a 10</span>
+        </h1>
+        <p class="text-sm text-zinc-400 max-w-md mx-auto">
+          Responda às 15 questões práticas sobre UI responsiva, Firebase Auth, NoSQL e Action Flows no celular.
+        </p>
+      </div>
+
+      <!-- Card com formulário -->
+      <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 sm:p-6 space-y-5 shadow-xl">
+        <div class="space-y-2">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-300" for="student-name">
+            Nome Completo do Aluno *
+          </label>
+          <input 
+            type="text" 
+            id="student-name" 
+            placeholder="Ex: Gabriel Santana" 
+            class="w-full bg-[#121214] border border-brand-border focus:border-brand-lime focus:ring-1 focus:ring-brand-lime rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-500 outline-none transition"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-300">
+            Sua Equipe de Hackathon *
+          </label>
+          <div class="grid grid-cols-2 gap-2.5" id="team-selector">
+            <button type="button" data-team="Pavimenta" class="team-btn text-left p-3 rounded-xl border border-brand-border bg-[#121214] hover:border-zinc-500 transition text-sm">
+              <span class="block font-semibold text-white">Pavimenta</span>
+              <span class="text-[11px] text-zinc-400">Infraestrutura</span>
+            </button>
+            <button type="button" data-team="Via Estudantil" class="team-btn text-left p-3 rounded-xl border border-brand-border bg-[#121214] hover:border-zinc-500 transition text-sm">
+              <span class="block font-semibold text-white">Via Estudantil</span>
+              <span class="text-[11px] text-zinc-400">Mobilidade</span>
+            </button>
+            <button type="button" data-team="SCC" class="team-btn text-left p-3 rounded-xl border border-brand-border bg-[#121214] hover:border-zinc-500 transition text-sm">
+              <span class="block font-semibold text-white">SCC</span>
+              <span class="text-[11px] text-zinc-400">Serviço de Coleta</span>
+            </button>
+            <button type="button" data-team="Fix Flash" class="team-btn text-left p-3 rounded-xl border border-brand-border bg-[#121214] hover:border-zinc-500 transition text-sm">
+              <span class="block font-semibold text-white">Fix Flash</span>
+              <span class="text-[11px] text-zinc-400">Marketplace</span>
+            </button>
+          </div>
+          <p id="error-team" class="text-xs text-rose-400 hidden">Selecione uma das equipes para continuar.</p>
+        </div>
+
+        <div class="pt-2">
+          <button 
+            id="btn-start" 
+            class="w-full bg-brand-lime hover:bg-brand-limeDark text-zinc-950 font-heading font-bold py-3.5 px-4 rounded-xl text-sm transition glow-lime-sm flex items-center justify-center space-x-2">
+            <span>Iniciar Simulado (15 Questões)</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Resumo rápido das regras -->
+      <div class="grid grid-cols-3 gap-2 text-center text-xs text-zinc-400">
+        <div class="bg-brand-surface/60 border border-brand-border/60 p-2.5 rounded-xl">
+          <p class="font-mono text-brand-lime font-bold text-sm">15</p>
+          <p class="text-[11px]">Questões</p>
+        </div>
+        <div class="bg-brand-surface/60 border border-brand-border/60 p-2.5 rounded-xl">
+          <p class="font-mono text-brand-lime font-bold text-sm">5</p>
+          <p class="text-[11px]">Opções cada</p>
+        </div>
+        <div class="bg-brand-surface/60 border border-brand-border/60 p-2.5 rounded-xl">
+          <p class="font-mono text-brand-lime font-bold text-sm">100%</p>
+          <p class="text-[11px]">Comentado</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================== -->
+    <!-- TELA 2: QUESTIONÁRIO FLUIDO              -->
+    <!-- ======================================== -->
+    <section id="screen-quiz" class="hidden space-y-4">
+      
+      <!-- Barra superior de progresso e navegação -->
+      <div class="bg-brand-surface border border-brand-border rounded-2xl p-4 space-y-3">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-zinc-400 font-mono" id="progress-indicator">Questão 1 de 15</span>
+          <span class="font-mono font-bold text-brand-lime" id="progress-percentage">7%</span>
+        </div>
+        <!-- Progress bar -->
+        <div class="w-full bg-[#121214] h-2 rounded-full overflow-hidden border border-brand-border/50">
+          <div id="progress-bar-fill" class="h-full bg-brand-lime rounded-full transition-all duration-300 w-[7%]"></div>
+        </div>
+
+        <!-- Grade rápida de navegação direta pelas 15 questões -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 custom-scrollbar" id="nav-bubbles">
+          <!-- Gerado dinamicamente via JS (1 a 15) -->
+        </div>
+      </div>
+
+      <!-- Card da Questão Ativa -->
+      <div class="bg-brand-surface border border-brand-border rounded-2xl p-5 sm:p-6 space-y-5 shadow-2xl relative">
+        <div class="flex items-center justify-between">
+          <span class="px-2.5 py-1 rounded-lg bg-zinc-800 text-[11px] font-mono font-semibold text-brand-lime border border-brand-border" id="q-badge">
+            AULA 1 • ONE-PAGER
+          </span>
+          <span class="text-xs text-zinc-400 flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 text-zinc-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+            1 alternativa correta
+          </span>
+        </div>
+
+        <h2 id="q-title" class="text-base sm:text-lg font-semibold text-white leading-relaxed">
+          Título da pergunta renderizado dinamicamente.
+        </h2>
+
+        <!-- Lista de Alternativas A, B, C, D, E -->
+        <div class="space-y-2.5" id="options-container">
+          <!-- Injetado dinamicamente -->
+        </div>
+      </div>
+
+      <!-- Botões de Ação Inferiores -->
+      <div class="flex items-center justify-between gap-3 pt-1">
+        <button 
+          id="btn-prev" 
+          class="flex-1 bg-brand-surface border border-brand-border hover:border-zinc-500 text-zinc-300 py-3 rounded-xl text-sm font-medium transition disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          <span>Anterior</span>
+        </button>
+
+        <button 
+          id="btn-next" 
+          class="flex-1 bg-brand-lime hover:bg-brand-limeDark text-zinc-950 font-heading font-bold py-3 rounded-xl text-sm transition flex items-center justify-center gap-1.5">
+          <span>Próxima</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+
+        <button 
+          id="btn-finish-quiz" 
+          class="hidden flex-1 bg-emerald-400 hover:bg-emerald-300 text-zinc-950 font-heading font-bold py-3 rounded-xl text-sm transition glow-lime-sm flex items-center justify-center gap-1.5">
+          <span>Finalizar</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+        </button>
+      </div>
+
+      <!-- Alerta dinâmico de pendências -->
+      <div id="unanswered-warning" class="hidden text-center text-xs text-amber-400 bg-amber-950/30 border border-amber-800/60 p-2.5 rounded-xl">
+        Você ainda tem questões em branco. Deseja finalizar mesmo assim?
+      </div>
+    </section>
+
+    <!-- ======================================== -->
+    <!-- TELA 3: RESULTADOS E GABARITO COMENTADO  -->
+    <!-- ======================================== -->
+    <section id="screen-results" class="hidden space-y-6">
+      
+      <!-- Card do Placar e Desempenho -->
+      <div class="bg-brand-surface border border-brand-border rounded-2xl p-6 text-center space-y-4 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-lime/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="space-y-1">
+          <p class="text-xs uppercase font-mono tracking-widest text-zinc-400">Desempenho da Avaliação</p>
+          <h2 id="result-student" class="text-xl font-heading font-extrabold text-white">Aluno da Silva</h2>
+          <p id="result-team" class="text-xs font-mono text-brand-lime">Equipe: Pavimenta</p>
+        </div>
+
+        <!-- Círculo do Score -->
+        <div class="inline-flex flex-col items-center justify-center w-36 h-36 rounded-full border-4 border-brand-border bg-[#121214] my-2 glow-lime-sm">
+          <span id="result-score" class="text-3xl font-heading font-black text-white">14/15</span>
+          <span id="result-percent" class="text-xs font-mono text-brand-lime font-bold mt-0.5">93% Acertos</span>
+        </div>
+
+        <div id="result-feedback" class="p-3 rounded-xl text-xs sm:text-sm font-medium border">
+          <!-- Preenchido via JS com mensagem de encorajamento ou parabéns -->
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <button 
+            id="btn-copy-result" 
+            class="bg-brand-card border border-brand-border hover:border-zinc-500 text-zinc-200 py-3 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 text-brand-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+            <span id="copy-btn-text">Copiar Nota</span>
+          </button>
+          <button 
+            id="btn-restart" 
+            class="bg-brand-lime hover:bg-brand-limeDark text-zinc-950 py-3 rounded-xl text-xs sm:text-sm font-heading font-bold transition flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Refazer Simulado</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Gabarito Oficial Comentado (Lista de todas as questões) -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between px-1">
+          <h3 class="text-sm font-heading font-bold uppercase tracking-wider text-zinc-300">Gabarito Comentado Oficial</h3>
+          <span class="text-xs text-zinc-400">15 Comentários Pedagógicos</span>
+        </div>
+
+        <div id="answers-breakdown" class="space-y-4">
+          <!-- Renderizado dinamicamente via JS com detalhamento de erro/acerto -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 3. FOOTER GLOBAL                           -->
+  <!-- ========================================== -->
+  <footer class="w-full border-t border-brand-border py-4 px-4 text-center text-xs text-zinc-400 bg-[#16161a]">
+    <div class="max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>Desenvolvimento Ágil de Apps • Polo Camaçari - BA</p>
+      <p class="font-mono text-zinc-400">Ambiente de Avaliação Prática</p>
+    </div>
+  </footer>
+
+  <!-- Modal / Notificação Flutuante de Cópia (Sem usar alert) -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-900 border border-brand-lime text-brand-lime text-xs px-4 py-2.5 rounded-xl shadow-2xl font-mono opacity-0 pointer-events-none transition-all duration-300 z-50">
+    Nota copiada para a área de transferência!
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 4. LÓGICA E DADOS DAS 15 QUESTÕES          -->
+  <!-- ========================================== -->
+  <script>
+    // Banco oficial com as 15 questões idênticas ao plano pedagógico
+    const questionsData = [
+      {
+        id: 1,
+        topic: "AULA 1 • ONE-PAGER & ESCOPO",
+        question: "Na Aula 1, ao estruturar o 'One-Pager' (contrato de escopo do MVP), uma das seções mais importantes é o 'Cemitério de Ideias'. Qual é a finalidade estratégica dessa seção para uma equipe em formato de Hackathon?",
+        options: [
+          "Registrar bugs que foram detectados no código e que não puderam ser corrigidos.",
+          "Listar funcionalidades valiosas concebidas pela equipe, mas cortadas deliberadamente da V1.0 para assegurar a entrega no prazo.",
+          "Arquivar dados de usuários inativos que foram excluídos do console do Firebase.",
+          "Documentar telas rejeitadas pelo cliente por problemas de contraste ou identidade visual.",
+          "Descrever regras de segurança do Firestore que se tornaram obsoletas durante o desenvolvimento."
+        ],
+        correct: 1, // B
+        explanation: "O 'Cemitério de Ideias' formaliza o corte consciente de escopo, evitando a armadilha de tentar programar tudo e não entregar nada estável para o Demo Day."
+      },
+      {
+        id: 2,
+        topic: "AULA 2 • LAYOUT & RESPONSIVIDADE",
+        question: "Durante a construção da interface na Aula 2, um aluno insere uma Row contendo uma foto de perfil e um texto longo com a descrição do produto. Ao testar a tela, surge uma faixa listrada em amarelo e preto no canto direito indicando um erro visual. Qual é a causa desse problema e como resolvê-lo?",
+        options: [
+          "Erro de conexão com a API; deve-se reiniciar o cache do navegador.",
+          "Falta de chave primária no banco; deve-se cadastrar o campo UID no Firebase Authentication.",
+          "Estouro de largura (Overflow); deve-se envolver o Widget de texto com um Expanded ou Flexible.",
+          "Incompatibilidade de tema; deve-se desativar o Dark Mode no Theme Settings.",
+          "Ausência de Scroll; deve-se converter a Row obrigatoriamente em uma ListView horizontal."
+        ],
+        correct: 2, // C
+        explanation: "As faixas amarelas e pretas do Flutter/FlutterFlow indicam Overflow de pixels. O Expanded instrui o widget de texto a ocupar estritamente o espaço livre remanescente na Row."
+      },
+      {
+        id: 3,
+        topic: "AULA 2 • DESIGN SYSTEM",
+        question: "Na padronização visual de layouts (Aula 2), adota-se a 'Regra dos 8 Pixels' para espaçamentos e dimensionamento. Qual é o principal benefício técnico e estético ao seguir essa convenção?",
+        options: [
+          "Reduzir o tempo de compilação do FlutterFlow ao gerar o pacote APK.",
+          "Garantir harmonia visual, consistência de grid e fácil adaptação proporcional entre diferentes resoluções de tela.",
+          "Permitir que o Firebase sincronize documentos com maior velocidade através da rede.",
+          "Eliminar a obrigatoriedade de utilizar Columns e Rows no design da aplicação.",
+          "Aumentar a pontuação de SEO da aplicação web gerada no Web Publishing."
+        ],
+        correct: 1, // B
+        explanation: "A escala em múltiplos de 8 (8, 16, 24, 32...) cria um ritmo visual consistente e simplifica as decisões de padding/margin da equipe, evitando interfaces desalinhadas."
+      },
+      {
+        id: 4,
+        topic: "AULA 3 • COMPONENTIZAÇÃO",
+        question: "Na Aula 3, os alunos aprendem sobre 'Componentização'. Qual é a principal diferença prática entre transformar um Container estilizado em um 'Componente' em vez de simplesmente copiá-lo e colá-lo várias vezes na mesma página?",
+        options: [
+          "Componentes não aceitam passagem de dados dinâmicos por parâmetros.",
+          "Alterações feitas no componente mestre são propagadas automaticamente para todas as suas instâncias no app.",
+          "Componentes consomem menos requisições de leitura na cota diária do Cloud Firestore.",
+          "O uso de componentes impede que o aplicativo seja executado no modo Dark Mode.",
+          "Apenas componentes podem disparar chamadas externas de API REST."
+        ],
+        correct: 1, // B
+        explanation: "Componentes promovem reusabilidade e manutenção ágil: mudar a cor ou a tipografia no componente mestre atualiza todo o app de forma instantânea."
+      },
+      {
+        id: 5,
+        topic: "AULA 4 • PRIORIZAÇÃO MOSCOW",
+        question: "Na dinâmica MoSCoW aplicada antes do desenvolvimento prático do banco (Aula 4), um item classificado como 'Won't Have' significa que:",
+        options: [
+          "A funcionalidade é prioritária e inegociável para que o MVP funcione.",
+          "O recurso agrega alto valor, mas possui alternativas manuais caso o tempo aperte.",
+          "A funcionalidade é puramente cosmética e só será feita se sobrarem horas no Hackathon.",
+          "A funcionalidade foi formalmente deixada fora do escopo desta versão inicial para focar no essencial.",
+          "O recurso apresentou falha crítica nos testes e foi removido do Trello."
+        ],
+        correct: 3, // D
+        explanation: "'Won't Have' representa aquilo que a equipe concorda em não construir neste ciclo, protegendo os desenvolvedores contra a perda de foco e o esgotamento de prazo."
+      },
+      {
+        id: 6,
+        topic: "AULA 4 • FIREBASE AUTH & ROTAS",
+        question: "Ao estruturar a segurança básica no FlutterFlow (Aula 4), o desenvolvedor deve configurar as 'Entry Pages' nas configurações de autenticação. Qual é o papel dessas duas páginas?",
+        options: [
+          "Definir a página de política de privacidade e a página de termos de uso da LGPD.",
+          "Indicar qual tela será exibida para usuários conectados (Logged In) e qual será exibida para não autenticados (Logged Out).",
+          "Configurar a tela de carregamento (Splash) e a tela de erro 404 da aplicação web.",
+          "Estabelecer os limites de páginas que podem ser exportadas para o GitHub no plano gratuito.",
+          "Separar as telas que rodam em Android daquelas exclusivas para sistemas iOS."
+        ],
+        correct: 1, // B
+        explanation: "As Entry Pages protegem o app: garantem que pessoas sem login caiam na tela de entrada/boas-vindas, enquanto usuários autenticados vão direto para a Home."
+      },
+      {
+        id: 7,
+        topic: "AULA 5 • BANCO DE DADOS NOSQL",
+        question: "Durante a Aula 5, as equipes configuram operações de banco NoSQL (Cloud Firestore). Ao montar uma tela para exibir itens cadastrados, qual configuração é necessária na ListView?",
+        options: [
+          "Aplicar uma Action do tipo 'Upload Media' no evento de carregamento da página.",
+          "Criar uma Stored Procedure no console do Google Cloud para ordenar a lista.",
+          "Adicionar uma 'Backend Query' do tipo 'Query Collection' apontando para a coleção desejada.",
+          "Declarar uma variável de App State do tipo Double com o valor inicial zerado.",
+          "Converter todos os campos de texto do banco para chaves primárias do tipo Integer."
+        ],
+        correct: 2, // C
+        explanation: "Para alimentar listas dinamicamente no FlutterFlow, conecta-se a ListView a uma 'Backend Query' apontando para a coleção criada no Firestore."
+      },
+      {
+        id: 8,
+        topic: "AULA 5 • PARÂMETROS DE NAVEGAÇÃO",
+        question: "Na Aula 5, ao implementar a navegação da tela de lista (Home) para a tela de detalhes de um item, qual é a prática recomendada no FlutterFlow para exibir as informações completas daquele registro específico?",
+        options: [
+          "Criar uma cópia idêntica da coleção inteira dentro do App State da página de destino.",
+          "Passar o 'Document Reference' ou o próprio 'Document' como parâmetro de navegação para a tela de Detalhes.",
+          "Forçar o usuário a digitar novamente o ID do item em um campo de busca da nova tela.",
+          "Fazer o download de todo o banco em formato JSON e filtrar os dados via código nativo.",
+          "Excluir o documento original e recriá-lo na página seguinte com a Action Create Document."
+        ],
+        correct: 1, // B
+        explanation: "Passar a referência do documento (Document Reference) permite que a tela de detalhes carregue os dados exatos do item clicado de forma rápida e segura."
+      },
+      {
+        id: 9,
+        topic: "AULA 6 • CONEXÃO FLUTTERFLOW + FIREBASE",
+        question: "Na conexão técnica entre FlutterFlow e Firebase (Aula 6), qual informação gerada no Console do Firebase é fundamental para que o FlutterFlow localize o banco e gere os arquivos de configuração automaticamente?",
+        options: [
+          "O número do cartão de crédito cadastrado na conta de faturamento do Google Cloud.",
+          "A senha mestra do usuário administrador do sistema operacional.",
+          "O Project ID único do projeto Firebase colado na aba de integrações do FlutterFlow.",
+          "O link do repositório público do projeto hospedado no GitHub.",
+          "O código hexadecimal das cores primárias definidas no Theme Settings."
+        ],
+        correct: 2, // C
+        explanation: "O Project ID é o identificador único global do projeto no Google Cloud, necessário para o botão 'Auto Generate Config Files' autorizar os serviços."
+      },
+      {
+        id: 10,
+        topic: "AULA 7 • GESTÃO DE ESTADO",
+        question: "Na Aula 7, sobre Gestão de Estado, qual é a diferença fundamental entre uma variável do tipo 'Page State' e uma variável do tipo 'App State' com persistência ativada (Persisted)?",
+        options: [
+          "O Page State salva dados na nuvem do Firebase, enquanto o App State salva dados apenas na memória RAM.",
+          "O Page State existe apenas enquanto o usuário estiver na tela atual; o App State persistido permanece salvo no aparelho mesmo após fechar o app.",
+          "O Page State aceita apenas números inteiros, enquanto o App State aceita exclusivamente textos (Strings).",
+          "O App State só pode ser utilizado em aplicativos publicados na Google Play Store.",
+          "O Page State exige conexão ativa com a internet para ser lido ou atualizado."
+        ],
+        correct: 1, // B
+        explanation: "O Page State é volátil e local à tela ativa. O App State Persisted armazena os dados na memória física do aparelho (SharedPreferences / LocalStorage)."
+      },
+      {
+        id: 11,
+        topic: "AULA 8 • APIS REST & VIACEP",
+        question: "Na Aula 8, as equipes consomem uma API REST externa (ViaCEP) para buscar logradouro e bairro automaticamente a partir do CEP. Como o FlutterFlow extrai campos específicos da resposta JSON retornada pelo servidor?",
+        options: [
+          "Executando comandos SQL do tipo 'SELECT * FROM via_cep' diretamente no navegador.",
+          "Utilizando expressões 'JSON Path' (como $.logradouro ou $.bairro) mapeadas na configuração da API Call.",
+          "Disparando a Action 'Delete Document' para limpar as variáveis antes de cada requisição.",
+          "Convertendo a resposta do servidor obrigatoriamente para um arquivo de imagem PNG.",
+          "Enviando uma notificação por e-mail para o suporte dos Correios autorizar o retorno."
+        ],
+        correct: 1, // B
+        explanation: "O JSON Path permite navegar pelas chaves do objeto retornado pela API e selecionar individualmente apenas as propriedades desejadas."
+      },
+      {
+        id: 12,
+        topic: "AULA 8 • ACTION OUTPUTS",
+        question: "Ainda sobre a integração de APIs (Aula 8), para utilizar o endereço retornado pelo ViaCEP na interface do usuário, qual recurso do FlutterFlow deve ser conectado aos campos de texto (TextFields)?",
+        options: [
+          "Global Properties -> Current Device IP.",
+          "Action Output Variable gerada pelo disparo da chamada de API no botão de busca.",
+          "Theme Settings -> Secondary Background Color.",
+          "Widget State do botão de clique em formato de texto estático.",
+          "Regras de segurança (Firestore Rules) do console do Google Firebase."
+        ],
+        correct: 1, // B
+        explanation: "Ao disparar uma API Call dentro do fluxo de ações de um botão, o resultado retornado é salvo em uma 'Action Output Variable' acessível nos campos da tela."
+      },
+      {
+        id: 13,
+        topic: "AULA 9 • VALIDAÇÃO DEFENSIVA",
+        question: "Na Aula 9 (Lógica Condicional e Action Flows), qual é o objetivo de incluir a Action 'Validate Form' antes de disparar uma ação de 'Create Document' no banco de dados?",
+        options: [
+          "Verificar se a velocidade de download da rede do usuário é superior a 10 Mbps.",
+          "Impedir o envio de dados incompletos ou inválidos, conferindo se os campos obrigatórios atendem aos critérios definidos.",
+          "Transformar automaticamente letras minúsculas em maiúsculas em todos os campos de texto.",
+          "Criptografar as informações do formulário utilizando chaves assimétricas antes do envio.",
+          "Encerrar imediatamente a sessão do usuário conectado caso ele erre um caractere."
+        ],
+        correct: 1, // B
+        explanation: "'Validate Form' previne gravação de documentos corrompidos ou com valores vazios no Firebase, garantindo a integridade dos dados da aplicação."
+      },
+      {
+        id: 14,
+        topic: "AULA 9 • ACTION BLOCKS",
+        question: "Em fluxos de lógica complexos (Aula 9), quando uma equipe precisa repetir a mesma sequência de 5 ações de alerta visual em várias telas diferentes do app, qual é o recurso arquitetural correto a ser adotado no FlutterFlow?",
+        options: [
+          "Duplicar o projeto inteiro no painel de controle para cada tela nova.",
+          "Criar um 'Action Block' reutilizável contendo a lógica centralizada e invocá-lo onde for necessário.",
+          "Escrever o código em C++ e anexá-lo aos assets estáticos da aplicação.",
+          "Bloquear a navegação do usuário mantendo-o permanentemente na mesma página.",
+          "Utilizar a Action 'Launch URL' apontando para um vídeo explicativo no YouTube."
+        ],
+        correct: 1, // B
+        explanation: "Os Action Blocks funcionam como métodos ou funções reutilizáveis, evitando repetição de fluxos idênticos em múltiplos botões do projeto."
+      },
+      {
+        id: 15,
+        topic: "AULA 10 • RECURSOS NATIVOS & STORAGE",
+        question: "Na Aula 10, ao implementar o recurso de denúncias ou edição de perfil com foto, os alunos utilizam a Action 'Upload Media'. Onde o arquivo de imagem propriamente dito é armazenado fisicamente e o que é salvo no documento do Firestore?",
+        options: [
+          "A imagem é salva na memória RAM do aparelho e nenhum dado é enviado para a nuvem.",
+          "A imagem física vai para o Firebase Storage e a URL de acesso público (Uploaded File URL) é salva no campo do Firestore.",
+          "A imagem física é gravada diretamente dentro de uma coluna do tipo INT em uma tabela SQL relacional.",
+          "A imagem é compactada e gravada dentro do código-fonte compilado do APK Android.",
+          "O arquivo é enviado via WhatsApp para o professor validar antes de salvar no banco."
+        ],
+        correct: 1, // B
+        explanation: "Arquivos binários pesados (como fotos e vídeos) são armazenados no Firebase Storage. O banco de dados NoSQL (Firestore) guarda apenas a URL textual gerada."
+      }
+    ];
+
+    // Letras das opções
+    const letters = ['A', 'B', 'C', 'D', 'E'];
+
+    // Estado da aplicação
+    let studentData = {
+      name: '',
+      team: ''
+    };
+    let currentQuestionIndex = 0;
+    // Vetor com 15 posições para as respostas do aluno (null se em branco)
+    let userAnswers = new Array(questionsData.length).fill(null);
+
+    // Elementos DOM principais
+    const screenWelcome = document.getElementById('screen-welcome');
+    const screenQuiz = document.getElementById('screen-quiz');
+    const screenResults = document.getElementById('screen-results');
+
+    // Inicialização da Seleção de Equipes
+    const teamButtons = document.querySelectorAll('.team-btn');
+    teamButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        teamButtons.forEach(b => {
+          b.classList.remove('border-brand-lime', 'bg-brand-card', 'glow-lime-sm');
+          b.classList.add('border-brand-border', 'bg-[#121214]');
+        });
+        btn.classList.remove('border-brand-border', 'bg-[#121214]');
+        btn.classList.add('border-brand-lime', 'bg-brand-card', 'glow-lime-sm');
+        studentData.team = btn.getAttribute('data-team');
+        document.getElementById('error-team').classList.add('hidden');
+      });
+    });
+
+    // Iniciar Simulado
+    document.getElementById('btn-start').addEventListener('click', () => {
+      const nameInput = document.getElementById('student-name');
+      const name = nameInput.value.trim();
+
+      if (!name) {
+        nameInput.focus();
+        nameInput.classList.add('border-rose-500');
+        return;
+      }
+      nameInput.classList.remove('border-rose-500');
+
+      if (!studentData.team) {
+        document.getElementById('error-team').classList.remove('hidden');
+        return;
+      }
+
+      studentData.name = name;
+
+      // Troca de tela
+      screenWelcome.classList.add('hidden');
+      screenQuiz.classList.remove('hidden');
+
+      // Gera os bolhas de navegação e carrega a Q1
+      renderNavBubbles();
+      loadQuestion(0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Renderiza bolhas numéricas (1 a 15)
+    function renderNavBubbles() {
+      const navContainer = document.getElementById('nav-bubbles');
+      navContainer.innerHTML = '';
+
+      questionsData.forEach((q, idx) => {
+        const bubble = document.createElement('button');
+        bubble.type = 'button';
+        bubble.id = `nav-bubble-${idx}`;
+        bubble.className = `flex-shrink-0 w-8 h-8 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition border ${
+          idx === currentQuestionIndex 
+            ? 'border-brand-lime text-brand-lime bg-brand-card' 
+            : userAnswers[idx] !== null 
+              ? 'border-emerald-500/60 bg-emerald-950/40 text-emerald-300'
+              : 'border-brand-border text-zinc-500 bg-[#121214]'
+        }`;
+        bubble.innerText = idx + 1;
+        bubble.addEventListener('click', () => {
+          loadQuestion(idx);
+        });
+        navContainer.appendChild(bubble);
+      });
+    }
+
+    // Atualiza estado das bolhas
+    function updateNavBubbles() {
+      questionsData.forEach((q, idx) => {
+        const bubble = document.getElementById(`nav-bubble-${idx}`);
+        if (!bubble) return;
+        
+        const isCurrent = (idx === currentQuestionIndex);
+        const isAnswered = (userAnswers[idx] !== null);
+
+        if (isCurrent) {
+          bubble.className = 'flex-shrink-0 w-8 h-8 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition border border-brand-lime text-brand-lime bg-brand-card shadow-[0_0_8px_rgba(220,255,160,0.3)]';
+        } else if (isAnswered) {
+          bubble.className = 'flex-shrink-0 w-8 h-8 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition border border-emerald-500/70 bg-emerald-950/30 text-emerald-300';
+        } else {
+          bubble.className = 'flex-shrink-0 w-8 h-8 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition border border-brand-border text-zinc-400 bg-[#121214] hover:border-zinc-500';
+        }
+      });
+    }
+
+    // Carrega uma questão específica
+    function loadQuestion(index) {
+      currentQuestionIndex = index;
+      const q = questionsData[index];
+
+      // Atualiza textos de cabeçalho da questão
+      document.getElementById('q-badge').innerText = q.topic;
+      document.getElementById('q-title').innerText = `${q.id}. ${q.question}`;
+      
+      // Atualiza barra de progresso
+      const progressPercent = Math.round(((index + 1) / questionsData.length) * 100);
+      document.getElementById('progress-indicator').innerText = `Questão ${index + 1} de ${questionsData.length}`;
+      document.getElementById('progress-percentage').innerText = `${progressPercent}%`;
+      document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
+
+      // Renderiza as alternativas A a E
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+
+      q.options.forEach((optText, optIdx) => {
+        const isSelected = (userAnswers[index] === optIdx);
+        const letter = letters[optIdx];
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `option-btn w-full text-left p-3.5 rounded-xl border flex items-start space-x-3 transition ${
+          isSelected 
+            ? 'border-brand-lime bg-brand-lime/10 text-white shadow-[0_0_12px_rgba(220,255,160,0.15)]' 
+            : 'border-brand-border bg-[#141417] text-zinc-300 hover:border-zinc-500 hover:bg-[#18181d]'
+        }`;
+
+        btn.innerHTML = `
+          <span class="flex-shrink-0 w-7 h-7 rounded-lg font-mono text-xs font-bold flex items-center justify-center border transition ${
+            isSelected 
+              ? 'bg-brand-lime text-zinc-950 border-brand-lime' 
+              : 'bg-[#1e1e24] text-zinc-400 border-zinc-700'
+          }">
+            ${letter}
+          </span>
+          <span class="text-xs sm:text-sm pt-0.5 leading-relaxed font-normal">${optText}</span>
+        `;
+
+        btn.addEventListener('click', () => {
+          userAnswers[index] = optIdx;
+          loadQuestion(index); // re-renderiza para aplicar estilos de seleção
+        });
+
+        optionsContainer.appendChild(btn);
+      });
+
+      // Controle dos botões de navegação
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+      const btnFinish = document.getElementById('btn-finish-quiz');
+
+      btnPrev.disabled = (index === 0);
+
+      if (index === questionsData.length - 1) {
+        btnNext.classList.add('hidden');
+        btnFinish.classList.remove('hidden');
+      } else {
+        btnNext.classList.remove('hidden');
+        btnFinish.classList.add('hidden');
+      }
+
+      updateNavBubbles();
+    }
+
+    // Listeners dos botões de avançar/voltar
+    document.getElementById('btn-prev').addEventListener('click', () => {
+      if (currentQuestionIndex > 0) {
+        loadQuestion(currentQuestionIndex - 1);
+        window.scrollTo({ top: 100, behavior: 'smooth' });
+      }
+    });
+
+    document.getElementById('btn-next').addEventListener('click', () => {
+      if (currentQuestionIndex < questionsData.length - 1) {
+        loadQuestion(currentQuestionIndex + 1);
+        window.scrollTo({ top: 100, behavior: 'smooth' });
+      }
+    });
+
+    // Finalizar Avaliação e Calcular Nota
+    document.getElementById('btn-finish-quiz').addEventListener('click', () => {
+      const unansweredCount = userAnswers.filter(a => a === null).length;
+
+      if (unansweredCount > 0) {
+        const warn = document.getElementById('unanswered-warning');
+        warn.innerText = `Atenção: Você ainda tem ${unansweredCount} questão(ões) sem resposta. Clique novamente em Finalizar para enviar mesmo assim.`;
+        warn.classList.remove('hidden');
+        
+        // Se clicar pela segunda vez, confirma o envio
+        document.getElementById('btn-finish-quiz').onclick = finishAssessment;
+        return;
+      }
+
+      finishAssessment();
+    });
+
+    function finishAssessment() {
+      // Cálculo do Score
+      let score = 0;
+      questionsData.forEach((q, idx) => {
+        if (userAnswers[idx] === q.correct) {
+          score++;
+        }
+      });
+
+      const percentage = Math.round((score / questionsData.length) * 100);
+
+      // Preenche tela de resultados
+      document.getElementById('result-student').innerText = studentData.name;
+      document.getElementById('result-team').innerText = `Equipe: ${studentData.team} • Camaçari`;
+      document.getElementById('result-score').innerText = `${score}/${questionsData.length}`;
+      document.getElementById('result-percent').innerText = `${percentage}% de Acertos`;
+
+      const feedbackBox = document.getElementById('result-feedback');
+      if (percentage >= 80) {
+        feedbackBox.className = 'p-3 rounded-xl text-xs sm:text-sm font-medium border border-emerald-500/50 bg-emerald-950/30 text-emerald-300';
+        feedbackBox.innerText = `Excelente desempenho! A equipe ${studentData.team} está com a base técnica afiada para os Sprints do MVP.`;
+      } else if (percentage >= 60) {
+        feedbackBox.className = 'p-3 rounded-xl text-xs sm:text-sm font-medium border border-amber-500/50 bg-amber-950/30 text-amber-300';
+        feedbackBox.innerText = `Bom resultado! Revise os comentários abaixo sobre Firebase e Action Flows para acelerar o desenvolvimento.`;
+      } else {
+        feedbackBox.className = 'p-3 rounded-xl text-xs sm:text-sm font-medium border border-rose-500/50 bg-rose-950/30 text-rose-300';
+        feedbackBox.innerText = `Atenção aos fundamentos. Utilize o gabarito comentado abaixo para alinhar os conceitos com sua dupla de desenvolvimento.`;
+      }
+
+      // Renderiza o detalhamento do Gabarito Comentado
+      renderBreakdown();
+
+      // Troca para a tela 3
+      screenQuiz.classList.add('hidden');
+      screenResults.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Renderiza cada questão com o gabarito comentado
+    function renderBreakdown() {
+      const container = document.getElementById('answers-breakdown');
+      container.innerHTML = '';
+
+      questionsData.forEach((q, idx) => {
+        const studentAns = userAnswers[idx];
+        const isCorrect = (studentAns === q.correct);
+        const card = document.createElement('div');
+        card.className = `p-4 sm:p-5 rounded-2xl border transition ${
+          isCorrect 
+            ? 'bg-emerald-950/15 border-emerald-800/40' 
+            : 'bg-rose-950/15 border-rose-800/40'
+        }`;
+
+        let optionsHtml = '';
+        q.options.forEach((optText, oIdx) => {
+          const letter = letters[oIdx];
+          const isUserChoice = (studentAns === oIdx);
+          const isCorrectChoice = (q.correct === oIdx);
+
+          let badgeStyle = 'bg-zinc-800 text-zinc-400 border-zinc-700';
+          let rowStyle = 'text-zinc-400';
+
+          if (isCorrectChoice) {
+            badgeStyle = 'bg-emerald-500 text-zinc-950 border-emerald-400 font-bold';
+            rowStyle = 'text-emerald-300 font-medium';
+          } else if (isUserChoice && !isCorrect) {
+            badgeStyle = 'bg-rose-500 text-white border-rose-400 font-bold';
+            rowStyle = 'text-rose-300 line-through';
+          }
+
+          optionsHtml += `
+            <div class="flex items-start space-x-2 text-xs py-1 ${rowStyle}">
+              <span class="w-5 h-5 rounded flex-shrink-0 flex items-center justify-center font-mono border ${badgeStyle} text-[10px]">
+                ${letter}
+              </span>
+              <span class="pt-0.5 leading-relaxed">${optText}</span>
+            </div>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-zinc-800/80">
+            <span class="text-[10px] font-mono font-semibold tracking-wider uppercase text-zinc-400">${q.topic}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+              isCorrect 
+                ? 'bg-emerald-900/60 text-emerald-300 border border-emerald-700/50' 
+                : 'bg-rose-900/60 text-rose-300 border border-rose-700/50'
+            }">
+              ${isCorrect ? '✓ ACERTOU' : '✗ ERROU'}
+            </span>
+          </div>
+
+          <h4 class="text-xs sm:text-sm font-semibold text-white mb-3">
+            ${q.id}. ${q.question}
+          </h4>
+
+          <div class="space-y-1 mb-3.5 bg-black/20 p-2.5 rounded-xl border border-zinc-800/50">
+            ${optionsHtml}
+          </div>
+
+          <div class="bg-[#121214] border border-brand-border rounded-xl p-3 text-xs space-y-1">
+            <span class="font-mono font-bold text-brand-lime flex items-center gap-1 text-[11px]">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              COMENTÁRIO DO PROFESSOR:
+            </span>
+            <p class="text-zinc-300 leading-relaxed">${q.explanation}</p>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // Copiar Resultado para o Clipboard (compatível com restrições de iFrame)
+    document.getElementById('btn-copy-result').addEventListener('click', () => {
+      let score = 0;
+      questionsData.forEach((q, idx) => {
+        if (userAnswers[idx] === q.correct) score++;
+      });
+      const percent = Math.round((score / questionsData.length) * 100);
+
+      const summaryText = `*Simulado FlutterFlow & Firebase (Aulas 1 a 10)*\n` +
+                          `Aluno: ${studentData.name}\n` +
+                          `Equipe: ${studentData.team}\n` +
+                          `Nota Final: ${score}/${questionsData.length} (${percent}% de acertos)\n` +
+                          `Polo Camaçari - BA`;
+
+      // Fallback seguro usando textarea e document.execCommand
+      const tempArea = document.createElement('textarea');
+      tempArea.value = summaryText;
+      tempArea.style.position = 'fixed';
+      tempArea.style.left = '-9999px';
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      
+      try {
+        document.execCommand('copy');
+        showToast();
+      } catch (err) {
+        console.error('Falha ao copiar:', err);
+      }
+      document.body.removeChild(tempArea);
+    });
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    // Refazer Simulado
+    document.getElementById('btn-restart').addEventListener('click', () => {
+      userAnswers = new Array(questionsData.length).fill(null);
+      currentQuestionIndex = 0;
+      screenResults.classList.add('hidden');
+      screenWelcome.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
